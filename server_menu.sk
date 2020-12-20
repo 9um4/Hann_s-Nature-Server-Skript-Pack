@@ -1,0 +1,33 @@
+command /메뉴:
+	trigger:
+		set {_slot::%uuid of player%::13} to player's skull named "&r&f반갑습니다 %player%님."
+		set {_slot::%uuid of player%::28} to grass block named "&r&f스폰"
+		set lore of {_slot::%uuid of player%::28} to "&r&f스폰으로 이동합니다."
+		set {_slot::%uuid of player%::30} to stone named "&r&f야생"
+		set lore of {_slot::%uuid of player%::30} to "&r&f야생으로 이동합니다."
+		loop {_slot::%uuid of player%::*}:
+			set {gui::teleport_menu::slot::%uuid of player%::%loop-index%} to loop-value
+		clear {_slot::*}
+		set {_inv} to chest inventory with 5 rows named "&1&l텔레포트 메뉴"
+		loop {gui::teleport_menu::slot::%uuid of player%::*}:
+			set {_slot} to loop-index parsed as integer
+			set slot {_slot} of {_inv} to loop-value
+		open {_inv} to player
+		clear {gui::teleport_menu::slot::%uuid of player%::*}
+
+on inventory click:
+	if name of event-inventory is "&1&l텔레포트 메뉴":
+		if index of event-slot is 13:
+			cancel event
+		else if index of event-slot is 28:
+			set {_spawn} to location at (16.5, 71.0, 215.5) in world "world"
+			cancel event
+			teleport the player to {_spawn}
+			close player's inventory
+			message "[Server] 스폰으로 이동하였습니다."
+		else if index of event-slot is 30:
+			set {_nature} to location at (-48.5, 88.0, 376.5) in world "world"
+			cancel event
+			teleport the player to {_nature}
+			close player's inventory
+			message "[Server] 야생으로 이동하였습니다."
